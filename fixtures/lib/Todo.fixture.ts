@@ -1,8 +1,24 @@
 import { Page as BasePage, Locator } from "@playwright/test";
 
 export class Todo {
+   public readonly todoCount: Locator;
+   public readonly clearCompleted: Locator;
+
    constructor(private readonly page: BasePage) {
-      
+      this.todoCount = this.page.getByTestId('todo-count');
+      this.clearCompleted = this.getByAttribute('class', 'clear-completed');
+   }
+
+   /**
+    * Will add either a single or multiple items
+    * @param todo item(s) to add to the list
+    */
+   async createTodo(...todo: string[]) {
+      const input = this.page.getByPlaceholder('What needs to be done?');
+      for (const t of todo) {
+         await input.fill(t);
+         await input.press('Enter');
+      }
    }
 
    /**
