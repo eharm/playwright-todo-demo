@@ -13,11 +13,11 @@ export class Todo {
     * @param options Type of search on the value. With no options this only find and exact match of the value
     * @returns Locator for the found element(s)
     */
-   async getByAttribute(
+   getByAttribute(
       attribute: string,
       value?: string,
       options?: { search: 'contains' | 'startsWith' | 'endsWith' }
-   ): Promise<Locator> {
+   ): Locator {
       const search = options?.search
          ? { contains: '*', startsWith: '^', endsWith: '$' }[options?.search]
          : ''
