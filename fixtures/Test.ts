@@ -1,13 +1,13 @@
 import { test as base } from '@playwright/test';
-import { Todo } from './lib/Todo.fixture';
+import { TodoFixture } from './lib/Todo.fixture';
 
 type Fixture = {
-   todo: Todo
+   todo: TodoFixture
 }
 
 export const test = base.extend<Fixture>({
    todo: async ({ page }, use) => {
-      await use(new Todo(page));
+      await use(new TodoFixture(page));
    }
 })
 

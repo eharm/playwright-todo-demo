@@ -1,6 +1,6 @@
 import { Page as BasePage, Locator } from "@playwright/test";
 
-export class Todo {
+export class TodoFixture {
    public readonly todoCount: Locator;
    public readonly clearCompleted: Locator;
 
