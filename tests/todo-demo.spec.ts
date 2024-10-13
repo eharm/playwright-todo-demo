@@ -13,13 +13,12 @@ test.describe('Verify page elements', () => {
    
    test('Create todos', async ({ todo, page }) => {
       await expect(page.getByText('todos', { exact: false })).toBeVisible();
-      const todoInput = page.getByPlaceholder('What needs to be done?');
 
       for (const t of todoList) {
          const cnt = todoList.indexOf(t) + 1;
          // Add a todo
-         await todoInput.fill(t);
-         await todoInput.press('Enter');
+         await todo.todoInput.fill(t);
+         await todo.todoInput.press('Enter');
 
          // Confirm number of todos and content | last element is always current iteration (t)
          const todoItems = page.getByTestId('todo-item');
@@ -70,14 +69,39 @@ test.describe('Verify page elements', () => {
          const currentTodo = allTodos.filter({ hasText: t });
 
          await expect(allTodos).toHaveCount(cnt);
-         await currentTodo
-            .getByRole('checkbox')
-            .check();
+         await todo.toggleTodo('check', t);
          await expect(currentTodo).toHaveClass('completed');
          await todo.clearCompleted.click();
          await expect(allTodos).toHaveCount(--cnt)
       }
 
+      await expect(allTodos).toHaveCount(0);
+   })
+
+   test('Verify tabbed filtering', async ({ todo, page }) => {
+      const ts = ['active todo item', 'completed todo item']
+      // create todos and check
+      await todo.createTodo(...ts);
+      await todo.toggleTodo('check', ts[1]);
+
+      const allTodos = page.getByTestId('todo-item');
+
+      // Default tab state
+      await expect(todo.allTab).toHaveClass('selected');
+      await expect(todo.activeTab).not.toHaveClass('selected');
+      await expect(todo.completedTab).not.toHaveClass('selected');
+
+      await todo.activeTab.click({ force: true });
+      await expect(todo.activeTab).toHaveClass('selected');
+      await expect(allTodos).toHaveCount(1);
+      await expect(allTodos.getByTestId('todo-title')).toHaveText(ts[0]);
+
+      await todo.completedTab.click({ force: true });
+      await expect(todo.completedTab).toHaveClass('selected');
+      await expect(allTodos).toHaveCount(1);
+      await expect(allTodos.getByTestId('todo-title')).toHaveText(ts[1]);
+      
+      await todo.clearCompleted.click();
       await expect(allTodos).toHaveCount(0);
    })
 })
