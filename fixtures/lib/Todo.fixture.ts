@@ -31,6 +31,12 @@ export class TodoFixture {
       }
    }
 
+   /**
+    * This will toggle a checkbox for one or multiple todo items. There is an assertion
+    * on each check to confirm the expected state before check/uncheck
+    * @param state The desired state of the checkbox
+    * @param todoText The text of the todo to be check/unchecked
+    */
    async toggleTodo(state: 'check' | 'uncheck', ...todoText: string[]) {
       for (const t of todoText) {
          const checkbox = this.page.getByTestId('todo-item')
