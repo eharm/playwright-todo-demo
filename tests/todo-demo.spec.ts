@@ -104,4 +104,32 @@ test.describe('Verify page elements', () => {
       await todo.clearCompleted.click();
       await expect(allTodos).toHaveCount(0);
    })
+
+   test('Verify Editing of Todos', async ({ todo, page }) => {
+      await todo.createTodo(...todoList.slice(0, 2));
+      await todo.toggleTodo('check', todoList[1]);
+
+      const editText = ' Edited';
+      const allTodos = page.getByTestId('todo-item');
+      const firstTodo = allTodos.first();
+      const secondTodo = allTodos.last();
+
+      await expect(allTodos).toHaveCount(2);
+
+      // Edit an active todo
+      await expect(firstTodo).not.toHaveClass('editing');
+      await firstTodo.getByTestId('todo-title').dblclick({ force: true });
+      await expect(firstTodo).toHaveClass('editing')
+      await firstTodo.getByLabel('Edit').fill(todoList[0] + editText);
+      await firstTodo.getByLabel('Edit').press('Enter');
+      await expect(firstTodo.getByTestId('todo-title')).toHaveText(todoList[0] + editText);
+      
+      // Edit a completed todo
+      await expect(secondTodo).not.toHaveClass(/editing/);
+      await secondTodo.getByTestId('todo-title').dblclick({ force: true });
+      await expect(secondTodo).toHaveClass(/editing/)
+      await secondTodo.getByLabel('Edit').fill(todoList[1] + editText);
+      await secondTodo.getByLabel('Edit').press('Enter');
+      await expect(secondTodo.getByTestId('todo-title')).toHaveText(todoList[1] + editText);
+   })
 })
