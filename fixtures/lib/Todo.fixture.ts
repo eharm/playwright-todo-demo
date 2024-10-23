@@ -63,15 +63,16 @@ export class TodoFixture {
    getByAttribute(
       attribute: string,
       value?: string,
-      options?: { search: 'contains' | 'startsWith' | 'endsWith' }
+      options?: Partial<{ has: Locator, hasNot: Locator, hasNotText: string | RegExp, hasText: string | RegExp, search: 'contains' | 'startsWith' | 'endsWith' }>
    ): Locator {
-      const search = options?.search
+      const s = options?.search
          ? { contains: '*', startsWith: '^', endsWith: '$' }[options?.search]
          : ''
+      delete options?.search;
       if (value) {
-         return this.page.locator(`css=[${attribute}=${search}"${value}"]`)
+         return this.page.locator(`css=[${attribute}${s}="${value}"]`, options)
       }
-      return this.page.locator(`css=[${attribute}]`);
+      return this.page.locator(`css=[${attribute}]`, options);
    }
    //#endregion public methods
 }
