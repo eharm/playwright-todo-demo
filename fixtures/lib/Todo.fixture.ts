@@ -2,21 +2,18 @@ import { Page as BasePage, expect, Locator } from "@playwright/test";
 
 export class TodoFixture {
    //#region properties
-   public readonly todoInput: Locator;
-   public readonly todoCount: Locator;
-   public readonly clearCompleted: Locator;
-   public readonly allTab: Locator;
-   public readonly activeTab: Locator;
-   public readonly completedTab: Locator;
+   get todoInput(): Locator { return this.page.getByPlaceholder('What needs to be done?'); }
+   get todoCount(): Locator { return this.page.getByTestId('todo-count'); }
+   get clearCompleted(): Locator { return this.getByAttribute('class', 'clear-completed'); }
+   get allTab(): Locator { return this.page.locator('css=ul.filters a').filter({ hasText: 'All' }); }
+   get activeTab(): Locator { return this.page.locator('css=ul.filters a').filter({ hasText: 'Active' }); }
+   get completedTab(): Locator { return this.page.locator('css=ul.filters a').filter({ hasText: 'Completed' }); }
    //#endregion properties
 
-   constructor(private readonly page: BasePage) {
-      this.todoCount = this.page.getByTestId('todo-count');
-      this.clearCompleted = this.getByAttribute('class', 'clear-completed');
-      this.todoInput = this.page.getByPlaceholder('What needs to be done?');
-      this.allTab = this.page.locator('css=ul.filters a').filter({ hasText: 'All' });
-      this.activeTab = this.page.locator('css=ul.filters a').filter({ hasText: 'Active' });
-      this.completedTab = this.page.locator('css=ul.filters a').filter({ hasText: 'Completed' });
+   private readonly page: BasePage;
+
+   constructor(page: BasePage) {
+      this.page = page;
    }
 
    //#region public methods
