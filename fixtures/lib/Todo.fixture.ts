@@ -10,10 +10,8 @@ export class TodoFixture {
    get completedTab(): Locator { return this.page.locator('css=ul.filters a').filter({ hasText: 'Completed' }); }
    //#endregion properties
 
-   private readonly page: BasePage;
-
-   constructor(page: BasePage) {
-      this.page = page;
+   constructor(private readonly page: BasePage) {
+      
    }
 
    //#region public methods
